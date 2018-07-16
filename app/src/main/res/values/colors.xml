@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#0336FF</color>
+    <color name="colorPrimaryDark">#0035c9</color>
+    <color name="colorAccent">#FFDE03</color>
+    <color name="colorPrimaryLight">#5d7eff</color>
+    <color name= "bottom_nav_icon_disabled">#840336ff</color>
+    <color name= "bottom_nav_icon_disabled2">#e0273056</color>
+    <color name="white">#ffffff</color>
+    <color name="grayish_white">#9c9c9c</color>
+    <color name="grayish_black">#707070</color>
+    <color name="shimmer_bg">#980336ff</color>
+    <color name="black">#000000</color>
+</resources>

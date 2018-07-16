@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:tools="http://schemas.android.com/tools"
+    app:cardElevation="16dp"
+    app:cardCornerRadius="8dp"
+    app:cardUseCompatPadding="true"
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/recyclerview_castlist_imageView"
+
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+
+            android:contentDescription="@string/cast_display_picture"
+            android:background="@drawable/scrim_gradient_rect"
+
+            android:scaleType="fitXY"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/recyclerview_castlist_textView_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginEnd="4dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+
+            android:fontFamily="sans-serif-condensed"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="italic|bold"
+
+            app:layout_constraintBottom_toTopOf="@+id/recyclerview_castlist_textView_character"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recyclerview_castlist_imageView"
+            tools:text="TextView" />
+
+        <TextView
+            android:id="@+id/recyclerview_castlist_textView_character"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginBottom="4dp"
+            android:layout_marginEnd="4dp"
+
+            android:fontFamily="sans-serif-condensed"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="12sp"
+            android:textStyle="italic"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/recyclerview_castlist_textView_name"
+            app:layout_constraintTop_toBottomOf="@+id/recyclerview_castlist_textView_name"
+            tools:text="TextView" />
+
+    </android.support.constraint.ConstraintLayout>
+</android.support.v7.widget.CardView>

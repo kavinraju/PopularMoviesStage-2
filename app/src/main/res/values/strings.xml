@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Popular Movies- 2</string>
+    <string name="action_settings">Settings</string>
+
+
+    <string name="this_imageview_displays_the_posters_of_the_movie_in_the_homeactivity">This imageview displays the posters of the movie in the HomeActivity</string>
+
+    <string name="bottom_navigation_title_popular">Popular</string>
+    <string name="bottom_navigation_title_top_rated">Top Rated</string>
+    <string name="bottom_navigation_title_upcoming">Up Coming</string>
+    <string name="bottom_navigation_title_favorite">Favourite</string>
+    <string name="bottom_navigation_title_settings">Settings</string>
+    <string name="title_activity_movie_details">Movie Details</string>
+    <string name="backdrop_image">BackDrop Image</string>
+    <string name="icon">icon</string>
+    <string name="no_data_available">No Data Available.</string>
+    <string name="no_tagline_available">No Tag Line Available.</string>
+    <string name="casts">Casts</string>
+    <string name="description">Description</string>
+    <!--<string name="dots">................</string>
+    <string name="dots_lenghty">................................................................................................</string>-->
+    <string name="shared_element_transition">sharedElementTransition</string>
+    <string name="connection_failed">Connection Failed</string>
+    <string name="retry">Retry</string>
+    <string name="cast_display_picture">Cast Display Picture</string>
+    <string name="trailers">Trailers</string>
+    <string name="thumbnail">thumbnail</string>
+    <string name="no_trailers_available">No Trailers Available</string>
+    <string name="title_activity_favorite_movie_details">FavoriteMovieDetailsActivity</string>
+    <string name="reviews">Reviews</string>
+    <string name="check_your_internet_connection">Check your Internet Connection.</string>
+    <string name="removed_from_favourite_list">Removed from Favourite List.</string>
+    <string name="added_to_fav_list">Added to Favourite List.</string>
+    <string name="please_wait_for_data_to_load">Please wait for Data to load....</string>
+    <string name="movies">Movies</string>
+
+</resources>

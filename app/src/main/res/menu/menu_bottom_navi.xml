@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/bottom_nav_popular"
+        android:icon="@drawable/popular_primary_24dp"
+        android:title="@string/bottom_navigation_title_popular" />
+
+    <item
+        android:id="@+id/bottom_nav_top_rated"
+        android:icon="@drawable/top_rated_primary_24dp"
+        android:title="@string/bottom_navigation_title_top_rated" />
+
+    <item
+        android:id="@+id/bottom_nav_upcoming"
+        android:icon="@drawable/upcoming_primary_24dp"
+        android:title="@string/bottom_navigation_title_upcoming" />
+
+    <item
+        android:id="@+id/bottom_nav_favorite"
+        android:icon="@drawable/favorite_primary_24dp"
+        android:title="@string/bottom_navigation_title_favorite" />
+
+    <item
+        android:id="@+id/bottom_nav_settings"
+        android:icon="@drawable/settings_primary_24dp"
+        android:title="@string/bottom_navigation_title_settings" />
+
+
+</menu>

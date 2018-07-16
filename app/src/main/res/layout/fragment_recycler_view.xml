@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view_fragment"
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:layout_marginBottom="36dp"
+
+        app:layout_constraintBottom_toTopOf="@id/progressBar_fragment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+
+
+        <ProgressBar
+            android:id="@+id/progressBar_fragment"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+
+            style="?android:attr/progressBarStyle"
+            android:elevation="36dp"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+
+            android:background="@drawable/progressbar_bk"/>
+
+
+
+
+    <ImageView
+        android:id="@+id/img_connention_failed"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+
+        android:contentDescription="@string/connection_failed"
+
+        android:src="@drawable/signal_wifi_off_accent_48dp"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_connection_failed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/connection_failed"
+
+        style="@style/TextAppearance.AppCompat.Title"
+        android:textColor="@color/colorPrimaryDark"
+
+
+        app:layout_constraintEnd_toEndOf="@+id/img_connention_failed"
+        app:layout_constraintStart_toStartOf="@+id/img_connention_failed"
+        app:layout_constraintTop_toBottomOf="@+id/img_connention_failed" />
+
+    <Button
+        android:id="@+id/btn_networkRetry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:text="@string/retry"
+        android:textAllCaps="false"
+        android:elevation="16dp"
+        android:background="@drawable/button_bk"
+        android:textColor="@color/colorPrimary"
+
+        android:layout_marginTop="8dp"
+
+        app:layout_constraintTop_toBottomOf="@id/tv_connection_failed"
+        app:layout_constraintStart_toStartOf="@id/tv_connection_failed"
+        app:layout_constraintEnd_toEndOf="@id/tv_connection_failed" />
+</android.support.constraint.ConstraintLayout>
