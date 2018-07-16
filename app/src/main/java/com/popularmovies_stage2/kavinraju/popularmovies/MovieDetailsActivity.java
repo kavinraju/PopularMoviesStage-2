@@ -4,14 +4,12 @@ package com.popularmovies_stage2.kavinraju.popularmovies;
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
@@ -21,6 +19,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -28,13 +27,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -56,26 +55,33 @@ import com.popularmovies_stage2.kavinraju.popularmovies.HelperClass.AppExecutors
 import com.popularmovies_stage2.kavinraju.popularmovies.HelperClass.HelperMethods;
 import com.popularmovies_stage2.kavinraju.popularmovies.Utils.JsonUtils;
 import com.popularmovies_stage2.kavinraju.popularmovies.Utils.NetworkUtils;
+import com.popularmovies_stage2.kavinraju.popularmovies.ViewModel.FavMovieDetailsViewModel;
+import com.popularmovies_stage2.kavinraju.popularmovies.ViewModel.FavMovieDetailsViewModelFactory;
 import com.popularmovies_stage2.kavinraju.popularmovies.ViewModel.MovieDetailsViewModel;
 import com.popularmovies_stage2.kavinraju.popularmovies.ViewModel.MovieDetailsViewModelFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/*
+    /*
+     NOTE: This class consists of data for both normal loading of Data for MovieDetails as well as for
+     Favourite MovieDetails Screen.
+     Code in side if ( fromFavorite ) is for  Favourite MovieDetails Screen and else part is for Normal Movie Details Screen.
+    */
+
+    /*
     Rubric
-    <UI contains a screen for displaying the details for a selected movie.>
- */
+    <UI contains a screen for displaying the details for a selected movie, Trailers and Reviews.>
+    */
+
 public class MovieDetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks,
                                                         TrailersAdapter.OnTrailerTileClickListener, View.OnClickListener {
 
@@ -96,7 +102,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     private static String TRAILERS_BITMAPS_QUERY_EXTRA = "trailer_bitmaps_query";
     private static final String IS_FOR_CAST_BITMAPS_QUERY_EXTRA = "is_for_cast_bitmap_loading" ;
     private static final int CAST_ENTRIES_LOADER_ID = 107;
-    //private static final String CAST_ENTRIES_QUERY_EXTRA = "casr_entries_query_data";
 
     //Keys used for savedInstancestate
     private static String MOVIE_DETAIL_KEY ="movie_detail";
@@ -106,8 +111,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     private static String TRAILERS__KEY ="trailers";
     private static String REVIEWS__KEY ="reviews";
     private static String FAVORITE_KEY = "favorite";
-    private static String CAST_BITMAP_KEY ="cast_bitmap";
-    private static String TRAILERS_BITMAP__KEY ="trailers_bitmap";
 
     //Key used for SharedElementTransition
     public static String SHARED_ELEMENT_TRANSITION_EXTRA = "sharedElementTransition";
@@ -129,8 +132,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     private List<TrailerEntry> trailerEntries;
 
     //Bitmaps
-    private List<Bitmap> castBitmaps;
-    private List<Bitmap> trailersBitmaps;
+    private List<byte[]> castBitmapBytes = new ArrayList<>();
+    private List<byte[]> trailerBitmapBytes = new ArrayList<>();
 
     //Adapters
     private CastListAdapter castListAdapter;
@@ -214,13 +217,14 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         cardView_reviews.setOnClickListener(this);
 
         if (fromFavorite){
-
+            //Favourite MovieDetails Screen
             movieID = getIntent().getIntExtra("fav_movie" , -1);
             setUIComponents();
             setUpFavMovieViewModel();
 
         }else {
             movieDetail = getIntent().getParcelableExtra("movie");
+            setUpMovieDetailsViewModel();
         }
 
 
@@ -236,13 +240,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
             movieReviews = (ArrayList<MovieReviews>) savedInstanceState.getSerializable(REVIEWS__KEY);
             language = savedInstanceState.getString(LANGUAGE__KEY);
             favorite = savedInstanceState.getBoolean(FAVORITE_KEY);
-            castBitmaps = (List<Bitmap>) savedInstanceState.getSerializable(CAST_BITMAP_KEY);
-            trailersBitmaps =  (List<Bitmap>) savedInstanceState.getSerializable(TRAILERS_BITMAP__KEY);
-            if (castBitmaps == null){
-                showToastMessage(R.drawable.progressbar_bk, R.string.bottom_navigation_title_favorite);
-            }else {
-                showToastMessage(R.drawable.progressbar_bk, R.string.action_settings);
-            }
 
             textView_movieTitle.setText(movieDetail.getOriginalTitle()); // Title is set here
             String date = HelperMethods.getdetiledDate(movieDetail.getReleaseDate());
@@ -258,7 +255,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
             } else {
                 imageButton_favorite.setBackgroundResource(R.drawable.favorite_border_primary_24dp);
             }
-            if( castBitmaps != null) {
+            if( castBitmapBytes != null) {
                 progressBarCasts.setVisibility(View.GONE);
             }
 
@@ -315,15 +312,118 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
             outState.putSerializable(REVIEWS__KEY, movieReviews);
             outState.putString(LANGUAGE__KEY, language);
             outState.putBoolean(FAVORITE_KEY, favorite);
-            outState.putSerializable(CAST_BITMAP_KEY, (Serializable) castBitmaps);
-            outState.putSerializable(TRAILERS_BITMAP__KEY, (Serializable) trailersBitmaps);
         }
     }
-
 
     @OnClick(R.id.img_btn_back)
     public void onClick(){
         supportFinishAfterTransition();
+    }
+
+
+    @Override
+    public void onTrailerClickListener(String key)
+    {
+
+        Uri url = NetworkUtils.buildURL_for_youtube_link(key);
+        Intent intent = new Intent(Intent.ACTION_VIEW, url);
+        startActivity(intent);
+    }
+
+
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()){
+            case R.id.img_btn_more_reviews:
+            case R.id.cv_reviews:
+                if (showAllReviews){
+                    recyclerView_reviews.setVisibility(View.VISIBLE);
+
+                    imageButton_more_reviews.animate()
+                            .rotationBy(180f)
+                            .setInterpolator(new LinearInterpolator())
+                            .start();
+                    showAllReviews = false;
+                }
+                else {
+                    recyclerView_reviews.setVisibility(View.GONE);
+
+                    imageButton_more_reviews.animate()
+                            .rotationBy(-180f)
+                            .setInterpolator(new LinearInterpolator())
+                            .start();
+                    showAllReviews = true;
+                }
+                break;
+            case R.id.img_btn_favorite:
+
+                if (fromFavorite) {
+
+                    // Favourite MovieDetails Screen
+                    // Delete From Database
+                    imageButton_favorite.startAnimation(AnimationUtils.loadAnimation(this,R.anim.heart_bounce));
+                    AppExecutors.getInstance().executorForDatabase().execute(new Runnable() {
+                        @Override
+                        public void run() {
+                            movieDatabase.movieDao().deleteMovie(movieEntry);
+                            movieDatabase.movieDao().deleteCasts(movieID);
+                            movieDatabase.movieDao().deleteTrailers(movieID);
+                            movieDatabase.movieDao().deleteReviews(movieID);
+                        }
+                    });
+
+                    finish();
+                }else {
+
+                    // Normal MovieDetails Screen
+                    if (favorite) {
+                        favorite = false;
+                        movieDetail.setFavorite(favorite);
+
+                        if (movieEntry !=null) {
+
+                            AppExecutors.getInstance().executorForDatabase().execute(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            imageButton_favorite.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.heart_bounce));
+                                            imageButton_favorite.setBackgroundResource(R.drawable.favorite_border_primary_24dp);
+                                            showToastMessage(R.drawable.favorite_border_accent_24dp,R.string.removed_from_favourite_list );
+                                        }
+                                    });
+                                    // Delete from Database
+                                    //movieEntry = movieDatabase.movieDao().findMovieEntry(movieID);
+                                    movieDatabase.movieDao().deleteMovie(movieEntry);
+                                    movieDatabase.movieDao().deleteCasts(movieID);
+                                    movieDatabase.movieDao().deleteTrailers(movieID);
+                                    movieDatabase.movieDao().deleteReviews(movieID);
+
+                                }
+                            });
+                        }
+                    } else {
+
+                        // Database
+                        if (movieDetail!=null && movieDetail2 !=null && castBitmapBytes.size() > 0 && trailerBitmapBytes.size() > 0) {
+
+                            // Insert Movie Details into Database
+                            loadCastDetailsIntoDatabase();
+
+                            favorite = true;
+                            movieDetail.setFavorite(favorite);
+
+                        }else {
+                            showToastMessage(R.drawable.progressbar_bk, R.string.please_wait_for_data_to_load);
+                        }
+
+                    }
+                }
+                break;
+        }
     }
 
 
@@ -415,7 +515,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     public void onLoaderReset(@NonNull Loader loader) {
 
     }
-
 
     // MovieDetail2 LoaderCallback method
     private LoaderManager.LoaderCallbacks<MovieDetail2> movieDetailLoaderCallback() {
@@ -737,7 +836,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     }
 
     //Cast and Trailers Bitmaps LoaderCallback method
-    private LoaderManager.LoaderCallbacks<List<Bitmap>> castBitmapsLoaderCallbacks(){
+    private LoaderManager.LoaderCallbacks<List<Bitmap>> castBitmapBytesLoaderCallbacks(){
 
         return new LoaderManager.LoaderCallbacks<List<Bitmap>>() {
             @SuppressLint("StaticFieldLeak")
@@ -761,6 +860,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
                             }
 
                             bitmaps =  NetworkUtils.getCastsBitmap(castDetails);
+
                         }else {
 
                             if (castDetails == null && args.getSerializable(TRAILERS_BITMAPS_QUERY_EXTRA) == null) {
@@ -784,12 +884,24 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
                     int loaderID = loader.getId();
 
                     if (loaderID == CAST_BITMAPS_QUERY_LOADER_ID) {
-                        castBitmaps = data;
+
+                        castBitmapBytes = new ArrayList<>();
+                        for (int i=0; i< data.size();i++){
+                            castBitmapBytes.add(getBitmapAsByteArray(data.get(i)));
+                        }
+                        //castBitmapBytes = data;
+
                         progressBarCasts.setVisibility(View.GONE);
                         Log.d("loader","finished1");
 
                     }else if (loaderID == TRAILERS_BITMAPS_LOADER_ID){
-                        trailersBitmaps = data;
+
+                        trailerBitmapBytes = new ArrayList<>();
+
+                        for (int i=0; i< data.size();i++){
+                            trailerBitmapBytes.add(getBitmapAsByteArray(data.get(i)));
+                        }
+                        //trailerBitmapBytes = data;
                         Log.d("loader","finished2");
                     }
 
@@ -859,23 +971,17 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         };
     }
 
-    @Override
-    public void onTrailerClickListener(String key)
-    {
-
-        Uri url = NetworkUtils.buildURL_for_youtube_link(key);
-        Intent intent = new Intent(Intent.ACTION_VIEW, url);
-        startActivity(intent);
-    }
 
     /*
      **********************HELPER METHODS**************************
      */
 
-    //Helper Method to set UI Components
+    //Helper Method to set UI Components - Favorite Movies Details & Normal Movie Details
     private void setUIComponents() {
 
         if (fromFavorite){
+
+            // Favourite MovieDetails Screen
 
             imageButton_favorite.setBackgroundResource(R.drawable.favorite_primary_24dp);
             progressBarCasts.setVisibility(View.GONE);
@@ -895,12 +1001,11 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
             imageView_backdrop.setDrawingCacheEnabled(true);
             imageView_poster.setDrawingCacheEnabled(true);
 
-
             // Database
-            MovieDetailsViewModelFactory viewModelFactory = new MovieDetailsViewModelFactory(movieDatabase, movieID);
-            MovieDetailsViewModel movieDetailsViewModel = ViewModelProviders
-                    .of(this, viewModelFactory)
-                    .get(MovieDetailsViewModel.class);
+            FavMovieDetailsViewModelFactory viewModelFactory1 = new FavMovieDetailsViewModelFactory(movieDatabase, movieID);
+            FavMovieDetailsViewModel movieDetailsViewModel = ViewModelProviders
+                    .of(this, viewModelFactory1)
+                    .get(FavMovieDetailsViewModel.class);
             movieDetailsViewModel.getMovieEntry().observe(this, new Observer<MovieEntry>() {
                 @Override
                 public void onChanged(@Nullable MovieEntry data) {
@@ -925,12 +1030,37 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
 
     }
 
-    // Helper Method to set up ViewModel
+    /*
+       HELPER METHOD TO SETUP VIEWMODEL
+   */
+
+    // Helper Method to set up ViewModel on MovieDetails screen - Normal Movie Details
+    private  void setUpMovieDetailsViewModel(){
+        MovieDetailsViewModelFactory viewModelFactory = new MovieDetailsViewModelFactory();
+        viewModelFactory.loadIntoCast(castBitmapBytes);
+        viewModelFactory.loadIntoTrailers(trailerBitmapBytes);
+        MovieDetailsViewModel movieDetailsViewModel = ViewModelProviders.of(this,viewModelFactory).get(MovieDetailsViewModel.class);
+        movieDetailsViewModel.getCastBitmapBytes().observe(this, new Observer<List<byte[]>>() {
+            @Override
+            public void onChanged(@Nullable List<byte[]> bytes) {
+                castBitmapBytes = bytes;
+            }
+        });
+        movieDetailsViewModel.getTrailerBitmapBytes().observe(this, new Observer<List<byte[]>>() {
+            @Override
+            public void onChanged(@Nullable List<byte[]> bytes) {
+                trailerBitmapBytes = bytes;
+            }
+        });
+    }
+
+    // Helper Method to set up ViewModel on  Favourite MovieDetails screen - Favorite Movies Details
     private void setUpFavMovieViewModel() {
-        MovieDetailsViewModelFactory viewModelFactory = new MovieDetailsViewModelFactory(movieDatabase, movieID);
-        MovieDetailsViewModel movieDetailsViewModel = ViewModelProviders
+
+        FavMovieDetailsViewModelFactory viewModelFactory = new FavMovieDetailsViewModelFactory(movieDatabase, movieID);
+        FavMovieDetailsViewModel movieDetailsViewModel = ViewModelProviders
                 .of(this, viewModelFactory)
-                .get(MovieDetailsViewModel.class);
+                .get(FavMovieDetailsViewModel.class);
         movieDetailsViewModel.getMovieEntry().observe(this, new Observer<MovieEntry>() {
             @Override
             public void onChanged(@Nullable MovieEntry data) {
@@ -965,6 +1095,11 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         });
     }
 
+    /*
+       HELPER METHOD TO SETUP FAV. MOVIES ENTRIES - Favorite Movies Details
+   */
+
+    // Favourite MovieDetails Screen
     private void setFavUIReviewEntries() {
         ArrayList<MovieReviews> movieReviews = new ArrayList<>();
         for (int i = 0; i < reviewsEntries.size(); i++) {
@@ -980,6 +1115,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         setMovieReviewsRecyclerView();
     }
 
+    // Favourite MovieDetails Screen
     private void setFavUITrailerEntries() {
         ArrayList<MovieTrailers> movieTrailers = new ArrayList<>();
         for (int i = 0; i < trailerEntries.size(); i++) {
@@ -999,6 +1135,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         setMovieTrailersRecyclerView();
     }
 
+    // Favourite MovieDetails Screen
     private void setFavUICastEntries() {
         ArrayList<CastDetails> castDetails = new ArrayList<>();
         for (int i = 0; i < castEntries.size(); i++) {
@@ -1016,6 +1153,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         setCastRecyclerView();
     }
 
+    // Favourite MovieDetails Screen
     private void setFavUIMovieEntry() {
         if (movieEntry != null){
             imageView_poster.setImageBitmap(BitmapFactory.decodeByteArray(movieEntry.getPoster(), 0, movieEntry.getPoster().length));
@@ -1032,6 +1170,10 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         }
 
     }
+
+    /*
+       HELPER METHOD TO LOAD IMAGES - Normal Movie Details
+   */
 
     //Helper Method to load Images
     @SuppressLint("StaticFieldLeak")
@@ -1088,6 +1230,10 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
                 .apply(options)
                 .into(imageView);
     }
+
+    /*
+       HELPER METHOD TO RUN LOADER MANAGERS - Normal Movie Details
+   */
 
     // Helper Method to start Loader for MovieDetails2
     private void runMovieDetail2_LoaderManager(int movieID) {
@@ -1201,9 +1347,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     private void runCastBitmap_LoaderManager(ArrayList<CastDetails> castDetailsList){
 
         // Parsing data into bundle
-        Bundle castBitmapsBundle = new Bundle();
-        castBitmapsBundle.putSerializable(CAST_BITMAPS_QUERY_EXTRA, castDetailsList);
-        castBitmapsBundle.putBoolean(IS_FOR_CAST_BITMAPS_QUERY_EXTRA, true);
+        Bundle castBitmapBytesBundle = new Bundle();
+        castBitmapBytesBundle.putSerializable(CAST_BITMAPS_QUERY_EXTRA, castDetailsList);
+        castBitmapBytesBundle.putBoolean(IS_FOR_CAST_BITMAPS_QUERY_EXTRA, true);
 
         LoaderManager loaderManager = getSupportLoaderManager();
         Loader<CastDetails> castDetailsLoader = loaderManager.getLoader(CAST_BITMAPS_QUERY_LOADER_ID);
@@ -1211,12 +1357,12 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         // Check if loader is available already
         if (castDetailsLoader == null) {
             getSupportLoaderManager().initLoader(CAST_BITMAPS_QUERY_LOADER_ID,
-                    castBitmapsBundle,
-                    castBitmapsLoaderCallbacks()).forceLoad();
+                    castBitmapBytesBundle,
+                    castBitmapBytesLoaderCallbacks()).forceLoad();
         } else {
             getSupportLoaderManager().restartLoader(CAST_BITMAPS_QUERY_LOADER_ID,
-                    castBitmapsBundle,
-                    castBitmapsLoaderCallbacks()).forceLoad();
+                    castBitmapBytesBundle,
+                    castBitmapBytesLoaderCallbacks()).forceLoad();
         }
 
     }
@@ -1225,9 +1371,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     private void runTrailersBitmap_LoaderManager(ArrayList<MovieTrailers> movieTrailers){
 
         // Parsing data into bundle
-        Bundle trailersBitmapsBundle = new Bundle();
-        trailersBitmapsBundle.putSerializable(TRAILERS_BITMAPS_QUERY_EXTRA, movieTrailers);
-        trailersBitmapsBundle.putBoolean(IS_FOR_CAST_BITMAPS_QUERY_EXTRA,false);
+        Bundle trailerBitmapBytesBundle = new Bundle();
+        trailerBitmapBytesBundle.putSerializable(TRAILERS_BITMAPS_QUERY_EXTRA, movieTrailers);
+        trailerBitmapBytesBundle.putBoolean(IS_FOR_CAST_BITMAPS_QUERY_EXTRA,false);
 
         LoaderManager loaderManager = getSupportLoaderManager();
         Loader<MovieTrailers> movieTrailersLoader = loaderManager.getLoader(TRAILERS_BITMAPS_LOADER_ID);
@@ -1235,12 +1381,12 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         // Check if loader is available already
         if (movieTrailersLoader == null) {
             getSupportLoaderManager().initLoader(TRAILERS_BITMAPS_LOADER_ID,
-                    trailersBitmapsBundle,
-                    castBitmapsLoaderCallbacks()).forceLoad();
+                    trailerBitmapBytesBundle,
+                    castBitmapBytesLoaderCallbacks()).forceLoad();
         } else {
             getSupportLoaderManager().restartLoader(TRAILERS_BITMAPS_LOADER_ID,
-                    trailersBitmapsBundle,
-                    castBitmapsLoaderCallbacks()).forceLoad();
+                    trailerBitmapBytesBundle,
+                    castBitmapBytesLoaderCallbacks()).forceLoad();
         }
 
     }
@@ -1268,18 +1414,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
 
     }
 
-    // Helper Method to get the Display width
-    public int getDisplaySize(){
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        return pxToDp(displayMetrics.widthPixels);
-    }
-
-    // Helper Metho to get the px to dp
-    public int pxToDp(int px){
-        return (int) (px / Resources.getSystem().getDisplayMetrics().density);
-    }
+    /*
+       HELPER METHOD TO SETUP RECYCLERVIEW - Favorite Movies Details & Normal Movie Details
+   */
 
     //Helper Method to set RecyclerView for Cast List
     private void setCastRecyclerView() {
@@ -1313,10 +1450,11 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
             textView_total_reviews.setText(String.valueOf(movieReviews.size()));
             recyclerView_reviews.setAdapter(reviewsAdapter);
         }else {
-            textView_total_reviews.setText("No Reviews");
+            textView_total_reviews.setText(R.string.no_reviews);
             imageButton_more_reviews.setVisibility(View.GONE);
         }
     }
+
     //Helper Method to set UI Components using MovieDetails2 object
     private void setUIComponentsUsingMovieDetails2(MovieDetail2 data) {
 
@@ -1341,12 +1479,37 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         }
     }
 
+     /*
+       HELPER METHOD FOR UTILS - Favorite Movies Details & Normal Movie Details
+   */
+
+    // Helper Method to get the Display width
+    public int getDisplaySize(){
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        return pxToDp(displayMetrics.widthPixels);
+    }
+
+    // Helper Metho to get the px to dp
+    public int pxToDp(int px){
+        return (int) (px / Resources.getSystem().getDisplayMetrics().density);
+    }
+
     //Helper Method to convert Bitmap into ByteArray
     public static byte[] getBitmapAsByteArray(Bitmap bitmap){
         if (bitmap != null) {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
             return outputStream.toByteArray();
+        }
+        return null;
+    }
+
+    //Helper Method to convert Byte into String
+    public static String getByteAsString(byte[] bitmap){
+        if (bitmap != null) {
+            return Base64.encodeToString(bitmap, Base64.DEFAULT);
         }
         return null;
     }
@@ -1380,102 +1543,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         }
     }
 
-
-    @Override
-    public void onClick(View v) {
-
-        switch (v.getId()){
-            case R.id.img_btn_more_reviews:
-            case R.id.cv_reviews:
-                if (showAllReviews){
-                    recyclerView_reviews.setVisibility(View.VISIBLE);
-                    imageButton_more_reviews.setBackgroundResource(R.drawable.ic_keyboard_arrow_up_black_24dp);
-                    showAllReviews = false;
-                }
-                else {
-                    recyclerView_reviews.setVisibility(View.GONE);
-                    imageButton_more_reviews.setBackgroundResource(R.drawable.ic_keyboard_arrow_down_black_24dp);
-                    showAllReviews = true;
-                }
-                break;
-            case R.id.img_btn_favorite:
-
-                if (fromFavorite) {
-
-                    // Delete From Database
-                    imageButton_favorite.startAnimation(AnimationUtils.loadAnimation(this,R.anim.heart_bounce));
-                    AppExecutors.getInstance().executorForDatabase().execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            movieDatabase.movieDao().deleteMovie(movieEntry);
-                            movieDatabase.movieDao().deleteCasts(movieID);
-                            movieDatabase.movieDao().deleteTrailers(movieID);
-                            movieDatabase.movieDao().deleteReviews(movieID);
-                        }
-                    });
-
-                    finish();
-                }else {
-
-                    if (favorite) {
-                        favorite = false;
-                        movieDetail.setFavorite(favorite);
-
-                        if (movieEntry !=null) {
-                            AppExecutors.getInstance().executorForDatabase().execute(new Runnable() {
-                                @Override
-                                public void run() {
-
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            imageButton_favorite.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.heart_bounce));
-                                            imageButton_favorite.setBackgroundResource(R.drawable.favorite_border_primary_24dp);
-                                            showToastMessage(R.drawable.favorite_border_accent_24dp,R.string.removed_from_favourite_list );
-                                        }
-                                    });
-                                    // Delete from Database
-                                    //movieEntry = movieDatabase.movieDao().findMovieEntry(movieID);
-                                    movieDatabase.movieDao().deleteMovie(movieEntry);
-                                    movieDatabase.movieDao().deleteCasts(movieID);
-                                    movieDatabase.movieDao().deleteTrailers(movieID);
-                                    movieDatabase.movieDao().deleteReviews(movieID);
-
-                                }
-                            });
-                        }
-                    } else {
-
-                        // Database
-                        if (movieDetail!=null && movieDetail2 !=null && castBitmaps != null && trailersBitmaps != null) {
-                            // Loading Data for MovieDetails
-                         //   loadMovieDetailsIntoDatabase();
-
-                            // Loading Data for Casts
-                            //loadCastsIntoDatabase();
-
-                            //Loading Data for Trailers
-                           // loadTrailersIntoDatabase();
-
-                            // Loading Data for Reviews
-                            //loadReviewsIntoDatabase();
-
-                            loadCastDetailsIntoDatabase();
-
-                            favorite = true;
-                            movieDetail.setFavorite(favorite);
-
-                            //showToastMessage(R.drawable.favorite_accent_24dp, R.string.added_to_fav_list);
-                        }else {
-                            showToastMessage(R.drawable.progressbar_bk, R.string.please_wait_for_data_to_load);
-                        }
-
-                    }
-                }
-                break;
-        }
-    }
-
+    /*
+        HELPER METHOD TO LOAD DATA INTO DATABASE - Normal Movie Details
+    */
     private void loadReviewsIntoDatabase() {
         final List<ReviewsEntry> reviewsEntry = new ArrayList<>();
         for (int i=0; i<movieReviews.size(); i++){
@@ -1486,36 +1556,18 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         }
 
         movieDatabase.movieDao().insertReviews(reviewsEntry);
-
-        /*AppExecutors.getInstance().executorForDatabase().execute(new Runnable() {
-            @Override
-            public void run() {
-*//*
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //imageButton_favorite.setBackgroundResource(R.drawable.favorite_primary_24dp);
-                    }
-                });
-                movieDatabase.movieDao().insertMovie(movieEntry);
-                movieDatabase.movieDao().insertCasts(castEntries);
-                movieDatabase.movieDao().insertTrailers(trailerEntries);*//*
-                movieDatabase.movieDao().insertReviews(reviewsEntry);
-
-            }
-        });*/
     }
 
     private void loadTrailersIntoDatabase() {
         final List<TrailerEntry> trailerEntries = new ArrayList<>();
-        if (trailersBitmaps != null) {
+        if (trailerBitmapBytes != null) {
             for (int i = 0; i < movieTrailers.size(); i++) {
 
-                if (trailersBitmaps.get(i) != null) {
+                if (trailerBitmapBytes.get(i) != null) {
                     TrailerEntry entry = new TrailerEntry(movieID, movieTrailers.get(i).getVideo_id(),
                             movieTrailers.get(i).getKey(), movieTrailers.get(i).getName(),
                             movieTrailers.get(i).getSite(), movieTrailers.get(i).getType(),
-                            getBitmapAsByteArray(trailersBitmaps.get(i)));
+                            trailerBitmapBytes.get(i));
                     trailerEntries.add(entry);
                 } else {
                     TrailerEntry entry = new TrailerEntry(movieID, movieTrailers.get(i).getVideo_id(),
@@ -1528,27 +1580,19 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         }
 
         movieDatabase.movieDao().insertTrailers(trailerEntries);
-
-       /* AppExecutors.getInstance().executorForDatabase().execute(new Runnable() {
-            @Override
-            public void run() {
-                movieDatabase.movieDao().insertTrailers(trailerEntries);
-
-            }
-        });*/
     }
 
    private void loadCastsIntoDatabase() {
         final List<CastEntry> castEntries = new ArrayList<>();
-        if(castBitmaps != null) {
+        if(castBitmapBytes != null) {
             for (int i = 0; i < castDetails.size(); i++) {
-                if (castBitmaps.get(i) != null) {
+                if (castBitmapBytes.get(i) != null) {
                     CastEntry entry = new CastEntry(movieID,
                             castDetails.get(i).getName(),
                             castDetails.get(i).getCharacter(),
                             castDetails.get(i).getGender(),
                             castDetails.get(i).getOrder(),
-                            getBitmapAsByteArray(castBitmaps.get(i)));
+                            castBitmapBytes.get(i));
                     castEntries.add(entry);
                 } else {
                     CastEntry entry = new CastEntry(movieID,
@@ -1564,20 +1608,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
 
        movieDatabase.movieDao().insertCasts(castEntries);
 
-        /*AppExecutors.getInstance().executorForDatabase().execute(new Runnable() {
-            @Override
-            public void run() {
-                movieDatabase.movieDao().insertCasts(castEntries);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        imageButton_favorite.setBackgroundResource(R.drawable.favorite_primary_24dp);
-                        imageButton_favorite.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(),R.anim.heart_bounce));
-                    }
-                });
-            }
-        });*/
-
     }
 
     private void loadMovieDetailsIntoDatabase() {
@@ -1589,12 +1619,5 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
                 getBitmapAsByteArray(bitmap_poster), getBitmapAsByteArray(bitmap_backDrop));
 
         movieDatabase.movieDao().insertMovie(movieEntry);
-        /*
-        AppExecutors.getInstance().executorForDatabase().execute(new Runnable() {
-            @Override
-            public void run() {
-                movieDatabase.movieDao().insertMovie(movieEntry);
-            }
-        });*/
     }
 }

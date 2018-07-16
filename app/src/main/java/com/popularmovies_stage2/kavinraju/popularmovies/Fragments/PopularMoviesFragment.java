@@ -155,14 +155,16 @@ public class PopularMoviesFragment extends Fragment implements LoaderManager.Loa
         mRecyclerView.setHasFixedSize(false);
         mRecyclerView.setAdapter(movieListAdapter_homeActivity);
 
+
+        setUpPagination();
+
+
         // For Debugging purpose
         if(defaultLoading){
             Log.d("defaultLoading", "true");
         }else {
             Log.d("defaultLoading", "false");
         }
-
-        setUpPagination();
 
         //Checking if network is available and setting up UI accordingly
         if (isNetworkAvailable()){
@@ -253,7 +255,7 @@ public class PopularMoviesFragment extends Fragment implements LoaderManager.Loa
     @Override
     public Loader< ArrayList<MovieDetail> > onCreateLoader(int id, @Nullable final Bundle args) {
 
-        return new AsyncTaskLoader< ArrayList<MovieDetail> >(getContext()) {
+        return new AsyncTaskLoader< ArrayList<MovieDetail> >(Objects.requireNonNull(getContext())) {
 
             @Override
             protected void onStartLoading() {
@@ -503,7 +505,7 @@ public class PopularMoviesFragment extends Fragment implements LoaderManager.Loa
          */
     private GridLayoutManager getGridLayoutManager(){
         GridLayoutManager layoutManager;
-        if (getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+        if (Objects.requireNonNull(getContext()).getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
 
             // if PORTRAIT mode set spanCount as
             layoutManager = new GridLayoutManager(getContext(),3);

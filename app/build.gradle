@@ -9,6 +9,9 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        //Please Add your API_KEY HERE
+        buildConfigField("String", "API_KEY",API_KEY)
     }
     buildTypes {
         release {
@@ -38,6 +41,7 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     compile 'com.android.support:palette-v7:27.1.1'
     implementation 'com.airbnb.android:lottie:2.5.0'
+
     implementation "android.arch.persistence.room:runtime:$lifecycle_version"
     annotationProcessor "android.arch.persistence.room:compiler:$lifecycle_version"
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"

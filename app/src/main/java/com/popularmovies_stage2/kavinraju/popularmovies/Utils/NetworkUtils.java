@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Log;
 
+import com.popularmovies_stage2.kavinraju.popularmovies.BuildConfig;
 import com.popularmovies_stage2.kavinraju.popularmovies.Data_Model.CastDetails;
 import com.popularmovies_stage2.kavinraju.popularmovies.Data_Model.MovieTrailers;
 import com.popularmovies_stage2.kavinraju.popularmovies.MovieDetailsActivity;
@@ -34,7 +35,7 @@ public class NetworkUtils {
     private static String CREDITS = "credits";    // This is used as parameter key
     private static String REVIEWS = "reviews";    // This is used as parameter key
     private static String VIDEOS = "videos";    // This is used as parameter key
-    private static String api_key = "YOUR_API_KEY"; // This is used as parameter value of api_key
+    private static String api_key = BuildConfig.API_KEY; // This is used as parameter value of api_key
     private static String language_english = "en-US";   // This is used as parameter value of language
     private static String BASE_IMAGE_URL = "http://image.tmdb.org/t/p";
     private static String W_185 = "w185";
@@ -256,14 +257,22 @@ public class NetworkUtils {
             String path = castDetails.get(i).getProfile_path();
             String img_url = NetworkUtils.buildURL_for_Image(path, false).toString();
             try {
-                URL url = new URL(img_url);
-                InputStream inputStream = url.openConnection().getInputStream();
-                if (inputStream != null) {
-                    castPicBitmap.add(BitmapFactory.decodeStream(inputStream));
+                if (path!=null){
+                    URL url = new URL(img_url);
+                    InputStream inputStream = url.openConnection().getInputStream();
+
+                    if (inputStream != null) {
+                        castPicBitmap.add(BitmapFactory.decodeStream(inputStream));
+                    }else {
+                        castPicBitmap.add(null);
+                        Log.d("bitmap","null");
+                    }
                 }else {
                     castPicBitmap.add(null);
-                    Log.d("bitmap","null");
+                    Log.d("bitmap-path","null");
                 }
+
+
             } catch(IOException e) {
                 System.out.println(e);
                 castPicBitmap.add(null);

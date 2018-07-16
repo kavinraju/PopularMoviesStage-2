@@ -1,49 +1,33 @@
 package com.popularmovies_stage2.kavinraju.popularmovies.ViewModel;
 
-import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.util.Log;
 
-import com.popularmovies_stage2.kavinraju.popularmovies.Database.CastEntry;
-import com.popularmovies_stage2.kavinraju.popularmovies.Database.MovieDatabase;
-import com.popularmovies_stage2.kavinraju.popularmovies.Database.MovieEntry;
-import com.popularmovies_stage2.kavinraju.popularmovies.Database.ReviewsEntry;
-import com.popularmovies_stage2.kavinraju.popularmovies.Database.TrailerEntry;
-import com.popularmovies_stage2.kavinraju.popularmovies.HelperClass.AppExecutors;
-
 import java.util.List;
 
+    /*
+        This ViewModel is used when MovieDetailsActivity is launced from PopularMovies & TopRatedMovies Fragment.
+     */
+
 public class MovieDetailsViewModel extends ViewModel {
+    //Bitmaps
+    private MutableLiveData<List<byte[]>> castBitmapBytes;
+    private MutableLiveData<List<byte[]>> trailerBitmapBytes;
 
-
-    private LiveData<MovieEntry> movieEntry;
-    private LiveData<List<CastEntry>> castEntries;
-    private LiveData<List<ReviewsEntry>> reviewsEntries;
-    private LiveData<List<TrailerEntry>> trailerEntries;
-
-    public MovieDetailsViewModel(MovieDatabase movieDatabase, int movieID) {
-        movieEntry = movieDatabase.movieDao().findMovieEntry(movieID);
-        castEntries = movieDatabase.movieDao().loadAllCasts(movieID);
-        reviewsEntries = movieDatabase.movieDao().loadAllReviews(movieID);
-        trailerEntries = movieDatabase.movieDao().loadAllTrailers(movieID);
-        Log.d("Querying from Database","MovieDetailsViewModel");
+    MovieDetailsViewModel(MutableLiveData<List<byte[]>> castBitmapBytes, MutableLiveData<List<byte[]>> trailerBitmapBytes) {
+        Log.d("MovieDetailsViewModel", "constructor");
+        this.castBitmapBytes =  castBitmapBytes;
+        this.trailerBitmapBytes = trailerBitmapBytes;
     }
 
-    public LiveData<MovieEntry> getMovieEntry() {
-        return movieEntry;
+    public MutableLiveData<List<byte[]>> getCastBitmapBytes() {
+        Log.d("MovieDetailsViewModel", "getCastBitmapBytes");
+        return castBitmapBytes;
     }
 
-    public LiveData<List<CastEntry>> getCastEntries() {
-        return castEntries;
+    public MutableLiveData<List<byte[]>> getTrailerBitmapBytes() {
+        Log.d("MovieDetailsViewModel", "getTrailerBitmapBytes");
+        return trailerBitmapBytes;
     }
-
-    public LiveData<List<ReviewsEntry>> getReviewsEntries() {
-        return reviewsEntries;
-    }
-
-    public LiveData<List<TrailerEntry>> getTrailerEntries() {
-        return trailerEntries;
-    }
-
-
 }

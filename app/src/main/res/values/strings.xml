@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Popular Movies- 2</string>
+    <string name="app_name">Popular Movies</string>
     <string name="action_settings">Settings</string>
 
 
@@ -33,5 +33,6 @@
     <string name="added_to_fav_list">Added to Favourite List.</string>
     <string name="please_wait_for_data_to_load">Please wait for Data to load....</string>
     <string name="movies">Movies</string>
+    <string name="no_reviews">No Reviews</string>
 
 </resources>

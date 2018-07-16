@@ -1,24 +1,38 @@
 package com.popularmovies_stage2.kavinraju.popularmovies.ViewModel;
 
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 import android.support.annotation.NonNull;
 
-import com.popularmovies_stage2.kavinraju.popularmovies.Database.MovieDatabase;
+import java.util.List;
 
-public class MovieDetailsViewModelFactory extends ViewModelProvider.NewInstanceFactory {
+    /*
+        This ViewModel is used when MovieDetailsActivity is launced from PopularMovies & TopRatedMovies Fragment.
+     */
 
-    private final MovieDatabase movieDatabase;
-    private final int movieID;
 
-    public MovieDetailsViewModelFactory(MovieDatabase movieDatabase, int movieID) {
-        this.movieDatabase = movieDatabase;
-        this.movieID = movieID;
+public class MovieDetailsViewModelFactory extends ViewModelProvider.NewInstanceFactory{
+
+    //Bitmaps
+    private MutableLiveData<List<byte[]>> castBitmapBytes;
+    private MutableLiveData<List<byte[]>> trailerBitmapBytes;
+
+    public MovieDetailsViewModelFactory() {
+        castBitmapBytes = new MutableLiveData<>();
+        trailerBitmapBytes = new MutableLiveData<>();
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        return (T) new MovieDetailsViewModel(movieDatabase, movieID);
+        return (T) new MovieDetailsViewModel(castBitmapBytes, trailerBitmapBytes);
+    }
+
+    public void loadIntoCast(List<byte[]> bytes){
+        castBitmapBytes.postValue(bytes);
+    }
+    public void loadIntoTrailers(List<byte[]> bytes){
+        trailerBitmapBytes.postValue(bytes);
     }
 }
