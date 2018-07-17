@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -74,7 +75,7 @@ import butterknife.OnClick;
     /*
      NOTE: This class consists of data for both normal loading of Data for MovieDetails as well as for
      Favourite MovieDetails Screen.
-     Code in side if ( fromFavorite ) is for  Favourite MovieDetails Screen and else part is for Normal Movie Details Screen.
+     Code inside if ( fromFavorite ) is for  Favourite MovieDetails Screen and else part is for Normal Movie Details Screen.
     */
 
     /*
@@ -205,6 +206,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         assert bundle != null;
         String imageTransitionName = bundle.getString(SHARED_ELEMENT_TRANSITION_EXTRA);
         imageView_poster.setTransitionName(imageTransitionName);
+
+        Typeface typeface = Typeface.createFromAsset(getAssets(),"font/BalooBhaina-Regular.ttf");
+        textView_movieTitle.setTypeface(typeface);
 
 
         // Database

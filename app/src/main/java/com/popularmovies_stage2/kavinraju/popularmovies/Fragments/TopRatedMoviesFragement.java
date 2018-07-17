@@ -62,6 +62,7 @@ public class TopRatedMoviesFragement extends Fragment implements LoaderManager.L
     private static int defaultPageNo = 1;
     private static boolean defaultLoading = true;
     private boolean isFirstTime = true;
+    private static int adapterPosition = 0;
 
     //Keys used for savedInstancestate
     private static String MOVIES_KEY ="movie_list";
@@ -128,7 +129,7 @@ public class TopRatedMoviesFragement extends Fragment implements LoaderManager.L
                 if (isFirstTime){
                     isFirstTime = false;
                 }else {
-                    setMovieListAdapter_HomeActivity();
+                    updateMovieListAdapter(adapterPosition);
                 }
             }
         });
@@ -364,6 +365,7 @@ public class TopRatedMoviesFragement extends Fragment implements LoaderManager.L
             This condition is necessary if we click on item that hasn't even loaded, this is the situation when there is no network and
             we try load data and do click.
              */
+            adapterPosition = clickedMoviePosition;
             Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
             intent.putExtra("movie", movieDetails.get(clickedMoviePosition));
             intent.putExtra("isFromFavorite", false);
@@ -490,6 +492,7 @@ public class TopRatedMoviesFragement extends Fragment implements LoaderManager.L
         return layoutManager;
     }
 
+    // Helper Method to Set the MovieList Adapter
     private void setMovieListAdapter_HomeActivity() {
         // Checking if the device is in PORTRAIT OR LANDSCAPE mode and then setting the respective span count
         mGridLayoutManager = getGridLayoutManager();
@@ -497,6 +500,14 @@ public class TopRatedMoviesFragement extends Fragment implements LoaderManager.L
         mRecyclerView.setHasFixedSize(false);
         movieListAdapter_homeActivity = new MovieListAdapter_HomeActivity(movieDetails,movieDetails.size(),favMovieIds,this);
         mRecyclerView.setAdapter(movieListAdapter_homeActivity);
+    }
+
+    // Helper Method to Update the MovieList Adapter
+    private void updateMovieListAdapter(int position) {
+        Log.d("setMovieListAdapter","1");
+        movieListAdapter_homeActivity = new MovieListAdapter_HomeActivity(movieDetails, movieDetails.size(),favMovieIds, this);
+        mRecyclerView.setAdapter(movieListAdapter_homeActivity);
+        mRecyclerView.scrollToPosition(position);
     }
 
     // Helper Method to show a Network error Toast message

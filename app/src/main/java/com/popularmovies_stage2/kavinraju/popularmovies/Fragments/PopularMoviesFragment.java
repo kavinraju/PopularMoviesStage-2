@@ -60,6 +60,7 @@ public class PopularMoviesFragment extends Fragment implements LoaderManager.Loa
     private static int defaultPageNo = 1;
     private static boolean defaultLoading = true;
     private boolean isFirstTime = true;
+    private static int adapterPosition = 0;
 
     //Keys used for savedInstancestate
     private static String MOVIES_KEY ="movie_list";
@@ -124,7 +125,7 @@ public class PopularMoviesFragment extends Fragment implements LoaderManager.Loa
                 if (isFirstTime){
                     isFirstTime = false;
                 }else {
-                    setMovieListAdapter_HomeActivity();
+                    updateMovieListAdapter(adapterPosition);
                 }
             }
         });
@@ -154,6 +155,7 @@ public class PopularMoviesFragment extends Fragment implements LoaderManager.Loa
         mRecyclerView.setLayoutManager(mGridLayoutManager);
         mRecyclerView.setHasFixedSize(false);
         mRecyclerView.setAdapter(movieListAdapter_homeActivity);
+
 
 
         setUpPagination();
@@ -217,9 +219,9 @@ public class PopularMoviesFragment extends Fragment implements LoaderManager.Loa
             defaultLoading = false;
 
         }
-
     }
 
+    // Helper Method to Set the MovieList Adapter
     private void setMovieListAdapter_HomeActivity() {
         Log.d("setMovieListAdapter","1");
         mGridLayoutManager = getGridLayoutManager();
@@ -227,6 +229,15 @@ public class PopularMoviesFragment extends Fragment implements LoaderManager.Loa
         mRecyclerView.setHasFixedSize(false);
         movieListAdapter_homeActivity = new MovieListAdapter_HomeActivity(movieDetails, movieDetails.size(),favMovieIds, this);
         mRecyclerView.setAdapter(movieListAdapter_homeActivity);
+    }
+
+
+    // Helper Method to Update the MovieList Adapter
+    private void updateMovieListAdapter(int position) {
+        Log.d("setMovieListAdapter","1");
+        movieListAdapter_homeActivity = new MovieListAdapter_HomeActivity(movieDetails, movieDetails.size(),favMovieIds, this);
+        mRecyclerView.setAdapter(movieListAdapter_homeActivity);
+        mRecyclerView.scrollToPosition(position);
     }
 
     @Override
@@ -392,6 +403,7 @@ public class PopularMoviesFragment extends Fragment implements LoaderManager.Loa
                  This condition is necessary if we click on item that hasn't even loaded, this is the situation when
                     there is no network and we try load data and do click.
              */
+                    adapterPosition = clickedMoviePosition;
                     Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
                     intent.putExtra("movie", movieDetails.get(clickedMoviePosition));
                     intent.putExtra("isFromFavorite", false);

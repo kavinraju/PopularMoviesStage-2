@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 
 import com.popularmovies_stage2.kavinraju.popularmovies.Adapter.FavoriteMoviesAdapter;
+import com.popularmovies_stage2.kavinraju.popularmovies.Adapter.MovieListAdapter_HomeActivity;
 import com.popularmovies_stage2.kavinraju.popularmovies.Database.MovieDatabase;
 import com.popularmovies_stage2.kavinraju.popularmovies.Database.MovieEntry;
 import com.popularmovies_stage2.kavinraju.popularmovies.HelperClass.AppExecutors;
@@ -26,6 +28,7 @@ import com.popularmovies_stage2.kavinraju.popularmovies.MovieDetailsActivity;
 import com.popularmovies_stage2.kavinraju.popularmovies.R;
 import com.popularmovies_stage2.kavinraju.popularmovies.ViewModel.FavoriteMoviesViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -38,11 +41,15 @@ public class FavoriteMoviesFragment extends Fragment implements FavoriteMoviesAd
     GridLayoutManager mGridLayoutManager;
     ProgressBar mProgressBar;
 
+    // Constants
     private String currentSelectedbottomNavigation;
+
+    private static int adapterPosition = 0;
+    private static boolean isFirstTime = true;
 
     // Database
     private MovieDatabase movieDatabase;
-    private List<MovieEntry> movieEntries;
+    private List<MovieEntry> movieEntries = new ArrayList<>();
 
     //Adapter
     private FavoriteMoviesAdapter favoriteMoviesAdapter;
@@ -74,8 +81,29 @@ public class FavoriteMoviesFragment extends Fragment implements FavoriteMoviesAd
         FavoriteMoviesViewModel moviesViewModel = ViewModelProviders.of(this).get(FavoriteMoviesViewModel.class);
         moviesViewModel.getMovieEntries().observe(this, new Observer<List<MovieEntry>>() {
             @Override
-            public void onChanged(@Nullable List<MovieEntry> movieEntries) {
-                setFavoriteMoviesAdapter(movieEntries);
+            public void onChanged(@Nullable List<MovieEntry> movie_Entries) {
+
+                Log.d("rr - Size - global", String.valueOf(movieEntries.size()));
+                Log.d("rr - Size - local", String.valueOf(movie_Entries.size()));
+
+                if (isFirstTime || movie_Entries.size() > movieEntries.size()) {
+                    setFavoriteMoviesAdapter(movie_Entries);
+                    isFirstTime = false;
+                    Log.d("rr","isFirsttime");
+
+                }else if (movie_Entries.size() < movieEntries.size() ) {
+                    movieEntries = movie_Entries;
+                    favoriteMoviesAdapter.updateFavMovieEntries(movie_Entries, adapterPosition);
+                    Log.d("rr","mid");
+
+                }else if(movieEntries.size() == movie_Entries.size() ){
+                    setFavoriteMoviesAdapter(movie_Entries);
+                    Log.d("rr","eq");
+
+                }else {
+                    Log.d("rr","else");
+                    setFavoriteMoviesAdapter(movie_Entries);
+                }
             }
         });
 
@@ -85,12 +113,12 @@ public class FavoriteMoviesFragment extends Fragment implements FavoriteMoviesAd
 
     private void setFavoriteMoviesAdapter(List<MovieEntry> movieEntries) {
         // Checking if the device is in PORTRAIT OR LANDSCAPE mode and then setting the respective span count
-        this.movieEntries = movieEntries;
-        mGridLayoutManager = getGridLayoutManager();
-        mRecyclerView.setLayoutManager(mGridLayoutManager);
-        mRecyclerView.setHasFixedSize(false);
-        favoriteMoviesAdapter = new FavoriteMoviesAdapter(movieEntries, movieEntries.size(), this);
-        mRecyclerView.setAdapter(favoriteMoviesAdapter);
+            this.movieEntries = movieEntries;
+            mGridLayoutManager = getGridLayoutManager();
+            mRecyclerView.setLayoutManager(mGridLayoutManager);
+            mRecyclerView.setHasFixedSize(false);
+            favoriteMoviesAdapter = new FavoriteMoviesAdapter(movieEntries, movieEntries.size(), this);
+            mRecyclerView.setAdapter(favoriteMoviesAdapter);
     }
 
 
@@ -118,6 +146,8 @@ public class FavoriteMoviesFragment extends Fragment implements FavoriteMoviesAd
     @Override
     public void onMovieTitleClick(View view, final int clickedMoviePosition) {
 
+        adapterPosition = clickedMoviePosition;
+
         switch (view.getId()) {
             case R.id.img_poster_recycerView_Card_HomeActivity:
                 if (movieEntries.size() > 0) {
@@ -125,6 +155,7 @@ public class FavoriteMoviesFragment extends Fragment implements FavoriteMoviesAd
                      This condition is necessary if we click on item that hasn't even loaded, this is the situation when
                         there is no network and we try load data and do click.
                  */
+
                     Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
                     intent.putExtra("isFromFavorite", true);
                     intent.putExtra("fav_movie", movieEntries.get(clickedMoviePosition).getMovieId());
@@ -142,6 +173,7 @@ public class FavoriteMoviesFragment extends Fragment implements FavoriteMoviesAd
                 if (movieEntries.size() > 0){
 
                     // Delete the movie from favoriteList
+
                     view.startAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.heart_bounce));
                     view.setBackgroundResource(R.drawable.favorite_border_primary_24dp);
                     final int movieID = movieEntries.get(clickedMoviePosition).getMovieId();

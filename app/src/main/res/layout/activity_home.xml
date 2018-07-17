@@ -21,7 +21,19 @@
             android:background="?attr/colorPrimary"
             app:title=" "
             app:layout_scrollFlags="scroll|enterAlways|snap"
-            app:popupTheme="@style/AppTheme.PopupOverlay"/>
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            <TextView
+                android:id="@+id/txt_toolbar"
+                android:text="@string/app_name"
+                android:layout_marginEnd="16dp"
+                android:gravity="center_horizontal"
+                android:textColor="@color/colorAccent"
+                style="@style/TextAppearance.AppCompat.Headline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </android.support.v7.widget.Toolbar>
+
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_home" />
@@ -42,3 +54,5 @@
 
 
 </android.support.design.widget.CoordinatorLayout>
+
+<!---->

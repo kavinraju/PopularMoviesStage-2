@@ -7,5 +7,6 @@
     <dimen name="movie_poster_width">100dp</dimen>
 
     <dimen name="movie_backDrop_height">250dp</dimen>
+    <dimen name="bottom_padding">36dp</dimen>
 
 </resources>

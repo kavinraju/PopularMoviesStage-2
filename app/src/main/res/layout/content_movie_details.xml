@@ -13,7 +13,7 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="36dp">
+        android:paddingBottom="@dimen/bottom_padding">
 
         <ImageView
             android:id="@+id/img_backDrop"
@@ -85,8 +85,10 @@
             android:layout_marginTop="8dp"
 
             android:fontFamily="sans-serif-smallcaps"
+
             android:textColor="@color/colorPrimaryDark"
             android:textStyle="bold"
+
             app:layout_constraintEnd_toStartOf="@+id/img_btn_favorite"
 
             app:layout_constraintStart_toEndOf="@+id/img_poster_cardview"
@@ -115,7 +117,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
 
-            android:layout_marginTop="8dp"
             android:contentDescription="@string/icon"
 
 

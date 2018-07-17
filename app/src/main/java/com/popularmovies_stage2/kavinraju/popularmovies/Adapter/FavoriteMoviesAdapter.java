@@ -106,8 +106,9 @@ public class FavoriteMoviesAdapter extends RecyclerView.Adapter<FavoriteMoviesAd
         }
     }
 
-    public void removeMovieEntry(MovieEntry movieEntry, int removedItemPosition){
-        movieEntries.remove(movieEntry);
+    public void updateFavMovieEntries(List<MovieEntry> entries, int removedItemPosition){
+        movieEntries = entries;
+        totalMovies = movieEntries.size();
         notifyItemRemoved(removedItemPosition);
     }
 }

@@ -11,7 +11,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         //Please Add your API_KEY HERE
-        buildConfigField("String", "API_KEY",API_KEY)
+        buildConfigField("String", "API_KEY", API_KEY)
     }
     buildTypes {
         release {
@@ -46,5 +46,4 @@ dependencies {
     annotationProcessor "android.arch.persistence.room:compiler:$lifecycle_version"
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
     annotationProcessor "android.arch.lifecycle:compiler:$lifecycle_version"
-
 }

@@ -1,5 +1,6 @@
 package com.popularmovies_stage2.kavinraju.popularmovies;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -9,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.popularmovies_stage2.kavinraju.popularmovies.Fragments.FavoriteMoviesFragment;
@@ -33,6 +35,8 @@ public class HomeActivity extends AppCompatActivity  implements BottomNavigation
     // UI components
     Toolbar mToolbar;
     BottomNavigationView mBottomNavigationView;
+    TextView textViewToolBar;
+    Typeface typeface;
 
 
     //Fragments
@@ -49,7 +53,11 @@ public class HomeActivity extends AppCompatActivity  implements BottomNavigation
         // Initializing UI Components
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        mToolbar.setTitle(getResources().getString(R.string.movies));
+        //mToolbar.setTitle(getResources().getString(R.string.app_name));
+
+        textViewToolBar = findViewById(R.id.txt_toolbar);
+        typeface = Typeface.createFromAsset(getAssets(),"font/Knewave-Regular.ttf");
+        textViewToolBar.setTypeface(typeface);
 
 
         mBottomNavigationView = findViewById(R.id.bottom_navigation_view);
