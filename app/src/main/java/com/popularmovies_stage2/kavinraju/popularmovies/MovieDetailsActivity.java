@@ -412,7 +412,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
                     } else {
 
                         // Database
-                        if (movieDetail!=null && movieDetail2 !=null && castBitmapBytes.size() > 0 && trailerBitmapBytes.size() > 0) {
+                        if (movieDetail!=null && movieDetail2 !=null ) {
 
                             // Insert Movie Details into Database
                             loadCastDetailsIntoDatabase();
@@ -940,16 +940,45 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
                     @Override
                     public Boolean loadInBackground() {
 
-                        // Loading Data for MovieDetails
-                        loadMovieDetailsIntoDatabase();
+                        // && castBitmapBytes.size() > 0 && trailerBitmapBytes.size() > 0
+                        if (castBitmapBytes != null && trailerBitmapBytes!=null){
+                            // Loading Data for MovieDetails
+                            loadMovieDetailsIntoDatabase();
 
-                        loadCastsIntoDatabase();
+                            loadCastsIntoDatabase();
 
-                        //Loading Data for Trailers
-                        loadTrailersIntoDatabase();
+                            //Loading Data for Trailers
+                            loadTrailersIntoDatabase();
 
-                        // Loading Data for Reviews
-                        loadReviewsIntoDatabase();
+                            // Loading Data for Reviews
+                            loadReviewsIntoDatabase();
+
+                        }else if (castBitmapBytes == null && trailerBitmapBytes == null){
+
+                            // Loading Data for MovieDetails
+                            loadMovieDetailsIntoDatabase();
+
+                            // Loading Data for Reviews
+                            loadReviewsIntoDatabase();
+
+                        }else if (castBitmapBytes != null && trailerBitmapBytes == null){
+
+                            // Loading Data for MovieDetails
+                            loadMovieDetailsIntoDatabase();
+
+                            // Loading Data for Reviews
+                            loadReviewsIntoDatabase();
+
+                        }else if (trailerBitmapBytes != null && castBitmapBytes == null ){
+
+                            // Loading Data for MovieDetails
+                            loadMovieDetailsIntoDatabase();
+
+                            // Loading Data for Reviews
+                            loadReviewsIntoDatabase();
+
+                        }
+
 
                         return true;
 
@@ -1564,7 +1593,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
 
     private void loadTrailersIntoDatabase() {
         final List<TrailerEntry> trailerEntries = new ArrayList<>();
-        if (trailerBitmapBytes != null) {
+        if (trailerBitmapBytes != null &&  trailerBitmapBytes.size() > 0) {
             for (int i = 0; i < movieTrailers.size(); i++) {
 
                 if (trailerBitmapBytes.get(i) != null) {
@@ -1588,7 +1617,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
 
    private void loadCastsIntoDatabase() {
         final List<CastEntry> castEntries = new ArrayList<>();
-        if(castBitmapBytes != null) {
+        if(castBitmapBytes != null && castBitmapBytes.size() > 0) {
             for (int i = 0; i < castDetails.size(); i++) {
                 if (castBitmapBytes.get(i) != null) {
                     CastEntry entry = new CastEntry(movieID,

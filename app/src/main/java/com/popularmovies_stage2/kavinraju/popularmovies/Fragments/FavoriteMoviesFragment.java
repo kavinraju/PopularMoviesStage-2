@@ -46,7 +46,7 @@ public class FavoriteMoviesFragment extends Fragment implements FavoriteMoviesAd
 
     private static int adapterPosition = 0;
     private static boolean isFirstTime = true;
-
+    private static boolean isFromOnStop = false;
     // Database
     private MovieDatabase movieDatabase;
     private List<MovieEntry> movieEntries = new ArrayList<>();
@@ -83,33 +83,38 @@ public class FavoriteMoviesFragment extends Fragment implements FavoriteMoviesAd
             @Override
             public void onChanged(@Nullable List<MovieEntry> movie_Entries) {
 
-                Log.d("rr - Size - global", String.valueOf(movieEntries.size()));
-                Log.d("rr - Size - local", String.valueOf(movie_Entries.size()));
+                Log.d("rrr - Size - global", String.valueOf(movieEntries.size()));
+                Log.d("rrr - Size - local", String.valueOf(movie_Entries.size()));
 
                 if (isFirstTime || movie_Entries.size() > movieEntries.size()) {
                     setFavoriteMoviesAdapter(movie_Entries);
                     isFirstTime = false;
-                    Log.d("rr","isFirsttime");
+                    Log.d("rrr","isFirsttime");
 
                 }else if (movie_Entries.size() < movieEntries.size() ) {
                     movieEntries = movie_Entries;
                     favoriteMoviesAdapter.updateFavMovieEntries(movie_Entries, adapterPosition);
-                    Log.d("rr","mid");
+                    Log.d("rrr","mid");
 
-                }else if(movieEntries.size() == movie_Entries.size() ){
+                }else if(movieEntries.size() == movie_Entries.size() && isFromOnStop){
                     setFavoriteMoviesAdapter(movie_Entries);
-                    Log.d("rr","eq");
-
-                }else {
-                    Log.d("rr","else");
-                    setFavoriteMoviesAdapter(movie_Entries);
+                    Log.d("rrr","eq");
+                    isFromOnStop = false;
                 }
+
+
             }
         });
 
 
         return rootView;
     }
+    @Override
+    public void onStop() {
+        super.onStop();
+        isFromOnStop = true;
+    }
+
 
     private void setFavoriteMoviesAdapter(List<MovieEntry> movieEntries) {
         // Checking if the device is in PORTRAIT OR LANDSCAPE mode and then setting the respective span count

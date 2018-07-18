@@ -138,7 +138,6 @@ public class MovieListAdapter_HomeActivity extends RecyclerView.Adapter<MovieLis
 
             switch (v.getId()){
                 case R.id.img_poster_recycerView_Card_HomeActivity:
-                case R.id.img_favorite_recycerView_Card_HomeActivity:
                     movieTileClickListener.onMovieTitleClick(v,this.getPosition());
                     break;
             }
