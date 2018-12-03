@@ -34,5 +34,15 @@
     <string name="please_wait_for_data_to_load">Please wait for Data to load....</string>
     <string name="movies">Movies</string>
     <string name="no_reviews">No Reviews</string>
+    <string name="title_activity_scrolling">ScrollingActivity</string>
+    <string name="github">GitHub</string>
+    <string name="linkedin">LinkedIn</string>
+    <string name="twitter">Twitter</string>
+    <string name="gmail">Gmail</string>
+    <string name="s_kavin_raju">S.Kavin Raju</string>
+    <string name="app_developed_by">App developed by</string>
+    <string name="desp_desp">Andorid Developer | Google Udacity India Scholar - #introductions channel moderator</string>
+    <string name="close_about_screen">Close button</string>
+    <string name="about">About</string>
 
 </resources>

@@ -11,4 +11,5 @@
     <color name="grayish_black">#707070</color>
     <color name="shimmer_bg">#980336ff</color>
     <color name="black">#000000</color>
+    <color name="grey">#585858</color>
 </resources>

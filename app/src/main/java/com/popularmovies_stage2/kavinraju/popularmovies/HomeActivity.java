@@ -9,17 +9,20 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.popularmovies_stage2.kavinraju.popularmovies.Fragments.AboutBottomSheetFragment;
 import com.popularmovies_stage2.kavinraju.popularmovies.Fragments.FavoriteMoviesFragment;
 import com.popularmovies_stage2.kavinraju.popularmovies.Fragments.PopularMoviesFragment;
 import com.popularmovies_stage2.kavinraju.popularmovies.Fragments.TopRatedMoviesFragement;
 import com.popularmovies_stage2.kavinraju.popularmovies.Fragments.UpComingMoviesFragment;
 import com.popularmovies_stage2.kavinraju.popularmovies.HelperClass.BottomNavigationBehavior;
 
-public class HomeActivity extends AppCompatActivity  implements BottomNavigationView.OnNavigationItemSelectedListener{
+public class HomeActivity extends AppCompatActivity  implements BottomNavigationView.OnNavigationItemSelectedListener {
 
 
     //Constants
@@ -30,10 +33,11 @@ public class HomeActivity extends AppCompatActivity  implements BottomNavigation
     private static String currentSelectedbottomNavigation = POPULAR;
 
     //Keys used for savedInstancestate
-    private static String POPULAR_MOVIE_LIST_FRAGMENT_KEY ="popular_movies_fragment";
-    private static String TOP_RATED_MOVIE_LIST_FRAGMENT_KEY ="top_rated_movies_fragment";
-    private static String FAVORITE_MOVIE_LIST_FRAGMENT_KEY ="favorite_movies_fragment";
-    private static String UP_COMING_MOVIE_LIST_FRAGMENT_KEY ="up_coming_movies_fragment";
+    private static String POPULAR_MOVIE_LIST_FRAGMENT_KEY = "popular_movies_fragment";
+    private static String TOP_RATED_MOVIE_LIST_FRAGMENT_KEY = "top_rated_movies_fragment";
+    private static String FAVORITE_MOVIE_LIST_FRAGMENT_KEY = "favorite_movies_fragment";
+    private static String UP_COMING_MOVIE_LIST_FRAGMENT_KEY = "up_coming_movies_fragment";
+    private static String ABOUT_BOTTOMSHEET_FRAGMENT_KEY = "about_bottomsheet_fragment";
 
     // UI components
     Toolbar mToolbar;
@@ -48,6 +52,7 @@ public class HomeActivity extends AppCompatActivity  implements BottomNavigation
     private TopRatedMoviesFragement topRatedMoviesFragement;
     private FavoriteMoviesFragment favoriteMoviesFragment;
     private UpComingMoviesFragment upComingMoviesFragment;
+    private AboutBottomSheetFragment aboutBottomSheetFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +65,7 @@ public class HomeActivity extends AppCompatActivity  implements BottomNavigation
         //mToolbar.setTitle(getResources().getString(R.string.app_name));
 
         textViewToolBar = findViewById(R.id.txt_toolbar);
-        typeface = Typeface.createFromAsset(getAssets(),"font/Knewave-Regular.ttf");
+        typeface = Typeface.createFromAsset(getAssets(), "font/Knewave-Regular.ttf");
         textViewToolBar.setTypeface(typeface);
 
 
@@ -69,35 +74,43 @@ public class HomeActivity extends AppCompatActivity  implements BottomNavigation
         CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mBottomNavigationView.getLayoutParams();
         layoutParams.setBehavior(new BottomNavigationBehavior());
 
-        if (savedInstanceState != null){
-
+        if (savedInstanceState != null) {
 
             popularMoviesFragment = (PopularMoviesFragment) getSupportFragmentManager().getFragment(savedInstanceState, POPULAR_MOVIE_LIST_FRAGMENT_KEY);
             topRatedMoviesFragement = (TopRatedMoviesFragement) getSupportFragmentManager().getFragment(savedInstanceState, TOP_RATED_MOVIE_LIST_FRAGMENT_KEY);
             favoriteMoviesFragment = (FavoriteMoviesFragment) getSupportFragmentManager().getFragment(savedInstanceState, FAVORITE_MOVIE_LIST_FRAGMENT_KEY);
             upComingMoviesFragment = (UpComingMoviesFragment) getSupportFragmentManager().getFragment(savedInstanceState, UP_COMING_MOVIE_LIST_FRAGMENT_KEY);
+            //aboutBottomSheetFragment = (AboutBottomSheetFragment) getSupportFragmentManager().getFragment(savedInstanceState, ABOUT_BOTTOMSHEET_FRAGMENT_KEY);
             /*
             This 'if' condition is to avoid NullPointerException on Fragment if we rotate the device
             without inflating the other fragment. i.e: If we rotate the device as soon as we open the
             App.
             */
-            if (topRatedMoviesFragement == null){
+            if (topRatedMoviesFragement == null) {
                 topRatedMoviesFragement = new TopRatedMoviesFragement();
                 topRatedMoviesFragement.setCurrentSelectedbottomNavigation(TOP_RATED);
             }
-            if (popularMoviesFragment == null){
+            if (popularMoviesFragment == null) {
                 popularMoviesFragment = new PopularMoviesFragment();
                 popularMoviesFragment.setCurrentSelectedbottomNavigation(POPULAR);
             }
-            if (favoriteMoviesFragment == null){
+            if (favoriteMoviesFragment == null) {
                 favoriteMoviesFragment = new FavoriteMoviesFragment();
                 favoriteMoviesFragment.setCurrentSelectedbottomNavigation(FAVORITE);
             }
-            if (upComingMoviesFragment == null){
+            if (upComingMoviesFragment == null) {
                 upComingMoviesFragment = new UpComingMoviesFragment();
                 upComingMoviesFragment.setCurrentSelectedbottomNavigation(UP_COMING);
             }
-        }else{
+            /*if (aboutBottomSheetFragment == null){
+                Log.d("about ","boutBottomSheetFragment == null");
+                aboutBottomSheetFragment = new AboutBottomSheetFragment();
+                aboutBottomSheetFragment.setAboutBottomSheetFragment(aboutBottomSheetFragment);
+            }else {
+                Log.d("about ","boutBottomSheetFragment != null");
+                aboutBottomSheetFragment.setAboutBottomSheetFragment(aboutBottomSheetFragment);
+            }*/
+        } else {
 
             popularMoviesFragment = new PopularMoviesFragment();
             popularMoviesFragment.setCurrentSelectedbottomNavigation(POPULAR);
@@ -127,20 +140,20 @@ public class HomeActivity extends AppCompatActivity  implements BottomNavigation
                     .replace(R.id.container_for_recycler_view, popularMoviesFragment, POPULAR)
                     .addToBackStack(null)
                     .commit();
-        }else if (currentSelectedbottomNavigation.equals(TOP_RATED)){
+        } else if (currentSelectedbottomNavigation.equals(TOP_RATED)) {
 
             //mToolbar.setTitle(getResources().getString(R.string.bottom_navigation_title_top_rated));
             fragmentManager.beginTransaction()
                     .replace(R.id.container_for_recycler_view, topRatedMoviesFragement, TOP_RATED)
                     .addToBackStack(null)
                     .commit();
-        }else if (currentSelectedbottomNavigation.equals(UP_COMING)){
+        } else if (currentSelectedbottomNavigation.equals(UP_COMING)) {
             //mToolbar.setTitle("Favorite Movies");
             fragmentManager.beginTransaction()
                     .replace(R.id.container_for_recycler_view, upComingMoviesFragment, UP_COMING)
                     .addToBackStack(null)
                     .commit();
-        }else if (currentSelectedbottomNavigation.equals(FAVORITE)){
+        } else if (currentSelectedbottomNavigation.equals(FAVORITE)) {
             //mToolbar.setTitle("Favorite Movies");
             fragmentManager.beginTransaction()
                     .replace(R.id.container_for_recycler_view, favoriteMoviesFragment, FAVORITE)
@@ -154,32 +167,37 @@ public class HomeActivity extends AppCompatActivity  implements BottomNavigation
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        if ( getSupportFragmentManager().findFragmentByTag(POPULAR).isAdded() ){
+        if (getSupportFragmentManager().findFragmentByTag(POPULAR).isAdded()) {
 
             getSupportFragmentManager().putFragment(outState, POPULAR_MOVIE_LIST_FRAGMENT_KEY, popularMoviesFragment);
         }
 
-        if ( getSupportFragmentManager().findFragmentByTag(TOP_RATED).isAdded() ){
+        if (getSupportFragmentManager().findFragmentByTag(TOP_RATED).isAdded()) {
 
             getSupportFragmentManager().putFragment(outState, TOP_RATED_MOVIE_LIST_FRAGMENT_KEY, topRatedMoviesFragement);
         }
 
-        if ( getSupportFragmentManager().findFragmentByTag(FAVORITE).isAdded() ){
+        if (getSupportFragmentManager().findFragmentByTag(FAVORITE).isAdded()) {
 
             getSupportFragmentManager().putFragment(outState, FAVORITE_MOVIE_LIST_FRAGMENT_KEY, favoriteMoviesFragment);
         }
 
-        if ( getSupportFragmentManager().findFragmentByTag(UP_COMING).isAdded() ){
+        if (getSupportFragmentManager().findFragmentByTag(UP_COMING).isAdded()) {
 
             getSupportFragmentManager().putFragment(outState, UP_COMING_MOVIE_LIST_FRAGMENT_KEY, upComingMoviesFragment);
         }
+       /* if (aboutBottomSheetFragment == null){
+            Log.d("about ","onSaveInstanceState - null");
+        }else {
+            getSupportFragmentManager().putFragment(outState, ABOUT_BOTTOMSHEET_FRAGMENT_KEY, aboutBottomSheetFragment);
+        }*/
     }// end of onSaveInstanceState
 
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
 
             case R.id.bottom_nav_popular:
                 currentSelectedbottomNavigation = POPULAR;
@@ -190,7 +208,7 @@ public class HomeActivity extends AppCompatActivity  implements BottomNavigation
 
                  */
 
-                if(fragmentManager.findFragmentByTag(POPULAR) instanceof PopularMoviesFragment){
+                if (fragmentManager.findFragmentByTag(POPULAR) instanceof PopularMoviesFragment) {
                     popularMoviesFragment = (PopularMoviesFragment) fragmentManager.findFragmentByTag(POPULAR);
                 }
 
@@ -204,11 +222,11 @@ public class HomeActivity extends AppCompatActivity  implements BottomNavigation
             case R.id.bottom_nav_top_rated:
                 currentSelectedbottomNavigation = TOP_RATED;
 
-                if(fragmentManager.findFragmentByTag(TOP_RATED) instanceof TopRatedMoviesFragement){
+                if (fragmentManager.findFragmentByTag(TOP_RATED) instanceof TopRatedMoviesFragement) {
                     topRatedMoviesFragement = (TopRatedMoviesFragement) fragmentManager.findFragmentByTag(TOP_RATED);
                 }
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container_for_recycler_view, topRatedMoviesFragement , TOP_RATED)
+                        .replace(R.id.container_for_recycler_view, topRatedMoviesFragement, TOP_RATED)
                         .addToBackStack(null)
                         .commit();
 
@@ -216,11 +234,11 @@ public class HomeActivity extends AppCompatActivity  implements BottomNavigation
             case R.id.bottom_nav_upcoming:
                 currentSelectedbottomNavigation = UP_COMING;
 
-                if(fragmentManager.findFragmentByTag(UP_COMING) instanceof UpComingMoviesFragment){
+                if (fragmentManager.findFragmentByTag(UP_COMING) instanceof UpComingMoviesFragment) {
                     upComingMoviesFragment = (UpComingMoviesFragment) fragmentManager.findFragmentByTag(UP_COMING);
                 }
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container_for_recycler_view, upComingMoviesFragment , UP_COMING)
+                        .replace(R.id.container_for_recycler_view, upComingMoviesFragment, UP_COMING)
                         .addToBackStack(null)
                         .commit();
 
@@ -228,11 +246,11 @@ public class HomeActivity extends AppCompatActivity  implements BottomNavigation
             case R.id.bottom_nav_favorite:
                 currentSelectedbottomNavigation = FAVORITE;
 
-                if (fragmentManager.findFragmentByTag(FAVORITE) instanceof  FavoriteMoviesFragment){
+                if (fragmentManager.findFragmentByTag(FAVORITE) instanceof FavoriteMoviesFragment) {
                     favoriteMoviesFragment = (FavoriteMoviesFragment) fragmentManager.findFragmentByTag(FAVORITE);
                 }
                 fragmentManager.beginTransaction()
-                        .replace(R.id.container_for_recycler_view, favoriteMoviesFragment , FAVORITE)
+                        .replace(R.id.container_for_recycler_view, favoriteMoviesFragment, FAVORITE)
                         .addToBackStack(null)
                         .commit();
 
@@ -243,6 +261,34 @@ public class HomeActivity extends AppCompatActivity  implements BottomNavigation
         }
 
         return false;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_home, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_about) {
+            aboutBottomSheetFragment = new AboutBottomSheetFragment();
+            aboutBottomSheetFragment.setAboutBottomSheetFragment(aboutBottomSheetFragment);
+            aboutBottomSheetFragment.show(getSupportFragmentManager(), aboutBottomSheetFragment.getTag());
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void setAboutBottomSheetFragment(AboutBottomSheetFragment aboutBottomSheetFragment) {
+        this.aboutBottomSheetFragment = aboutBottomSheetFragment;
+        if (aboutBottomSheetFragment == null){
+            Log.d("about ","setAboutBottomSheetFragment");
+        }
     }
 
 }

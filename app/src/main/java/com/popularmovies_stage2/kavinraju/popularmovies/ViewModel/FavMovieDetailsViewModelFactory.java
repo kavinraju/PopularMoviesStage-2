@@ -9,7 +9,7 @@ import com.popularmovies_stage2.kavinraju.popularmovies.Database.MovieDatabase;
 
 import java.util.List;
     /*
-    This ViewModel is used when MovieDetailsActivity is launced from FavoriteMovies Fragment.
+    This ViewModel is used when MovieDetailsActivity is launched from FavoriteMovies Fragment.
     */
 public class FavMovieDetailsViewModelFactory extends ViewModelProvider.NewInstanceFactory {
 

@@ -8,5 +8,26 @@
 
     <dimen name="movie_backDrop_height">250dp</dimen>
     <dimen name="bottom_padding">36dp</dimen>
+    <dimen name="padding_36dp">36dp</dimen>
+    <dimen name="img_backDrop_height">220dp</dimen>
+    <dimen name="margin_8dp">8dp</dimen>
+    <dimen name="margin_16dp">16dp</dimen>
+    <dimen name="card_elevation_24dp">24dp</dimen>
+    <dimen name="card_corner_radius_4dp">4dp</dimen>
+    <dimen name="img_btn_back_width">32dp</dimen>
+    <dimen name="img_btn_back_height">32dp</dimen>
+    <dimen name="elevation_16dp">16dp</dimen>
+    <dimen name="padding_8dp">8dp</dimen>
+    <dimen name="img_icon_language_width">16dp</dimen>
+    <dimen name="img_icon_genres_width">16dp</dimen>
+    <dimen name="margin_4dp">4dp</dimen>
+    <dimen name="img_icon_releaseDate_width">16dp</dimen>
+    <dimen name="imgStar_width">16dp</dimen>
+    <dimen name="progressBar_casts_width">16dp</dimen>
+    <dimen name="progressBar_casts_height">16dp</dimen>
+    <dimen name="card_elevation_4dp">4dp</dimen>
+    <dimen name="cardCornerRadius_2dp">2dp</dimen>
+    <dimen name="padding_4dp">4dp</dimen>
+    <dimen name="margin_32dp">32dp</dimen>
 
 </resources>

@@ -10,7 +10,7 @@ import com.popularmovies_stage2.kavinraju.popularmovies.Database.ReviewsEntry;
 import com.popularmovies_stage2.kavinraju.popularmovies.Database.TrailerEntry;
 import java.util.List;
     /*
-        This ViewModel is used when MovieDetailsActivity is launced from FavoriteMovies Fragment.
+        This ViewModel is used when MovieDetailsActivity is launched from FavoriteMovies Fragment.
     */
 
 public class FavMovieDetailsViewModel extends ViewModel {

@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottomSheet_about"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:layout_marginBottom="@dimen/margin_16dp"
+    android:elevation="36dp"
+    app:behavior_hideable="false"
+    app:behavior_peekHeight="405dp"
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+
+    <ImageButton
+        android:id="@+id/img_btn_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:background="@drawable/ripple_rounded_primary_dark"
+        android:contentDescription="@string/close_about_screen"
+        android:onClick="onClickCloseAbout"
+        android:src="@drawable/ic_close_black_24dp"
+        android:padding="@dimen/padding_4dp"
+
+        android:layout_marginStart="@dimen/margin_16dp"
+        android:layout_marginTop="@dimen/margin_16dp"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/view_top"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+
+        android:background="@color/colorPrimaryDark"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/tv__about_app_developed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:text="@string/app_developed_by"
+        style="@style/Base.TextAppearance.AppCompat.Large"
+        android:textColor="@color/colorPrimary"
+        android:textAllCaps="true"
+        android:textStyle="bold"
+
+        app:layout_constraintTop_toBottomOf="@id/img_btn_close"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/c_iv_about"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+
+        android:layout_marginTop="@dimen/margin_8dp"
+        android:elevation="26dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/kavin"
+        app:civ_border_color="@color/colorPrimaryLight"
+
+        app:civ_border_width="2dp"
+
+        app:layout_constraintEnd_toEndOf="@+id/tv__about_app_developed"
+        app:layout_constraintStart_toStartOf="@+id/tv__about_app_developed"
+        app:layout_constraintTop_toBottomOf="@id/tv__about_app_developed" />
+
+    <TextView
+        android:id="@+id/tv__about_name"
+        style="@style/Base.TextAppearance.AppCompat.Large"
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="sans-serif-smallcaps"
+        android:text="@string/s_kavin_raju"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimaryDark"
+
+        app:layout_constraintEnd_toEndOf="@+id/c_iv_about"
+        app:layout_constraintStart_toStartOf="@+id/c_iv_about"
+        app:layout_constraintTop_toBottomOf="@id/c_iv_about" />
+
+    <TextView
+        android:id="@+id/tv_about_desp"
+        style="@style/Base.TextAppearance.AppCompat.Small"
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:text="@string/desp_desp"
+        android:textColor="@color/black"
+        android:gravity="center"
+        android:paddingStart="@dimen/padding_8dp"
+        android:paddingLeft="@dimen/padding_8dp"
+        android:paddingEnd="@dimen/padding_8dp"
+        android:paddingRight="@dimen/padding_8dp"
+
+        app:layout_constraintLeft_toLeftOf="@id/c_iv_about"
+        app:layout_constraintRight_toRightOf="@+id/c_iv_about"
+        app:layout_constraintTop_toBottomOf="@id/tv__about_name" />
+
+    <ImageButton
+        android:id="@+id/github"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitXY"
+        android:src="@drawable/github_logo"
+        android:contentDescription="@string/github"
+
+        android:layout_margin="@dimen/margin_8dp"
+
+        app:layout_constraintBottom_toBottomOf="@+id/twitter"
+        app:layout_constraintEnd_toStartOf="@+id/gmail"
+        app:layout_constraintStart_toEndOf="@+id/twitter"
+        app:layout_constraintTop_toTopOf="@+id/twitter" />
+
+    <ImageButton
+        android:id="@+id/linkedIn"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/linkedin"
+        android:scaleType="fitXY"
+        android:src="@drawable/linkedin_logo"
+
+        android:layout_margin="@dimen/margin_8dp"
+
+        app:layout_constraintEnd_toStartOf="@+id/twitter"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_about_desp" />
+
+    <ImageButton
+        android:id="@+id/twitter"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_margin="@dimen/margin_8dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/twitter"
+        android:scaleType="fitXY"
+
+        android:src="@drawable/twitter_logo"
+
+        app:layout_constraintBottom_toBottomOf="@+id/linkedIn"
+        app:layout_constraintEnd_toStartOf="@+id/github"
+        app:layout_constraintStart_toEndOf="@+id/linkedIn"
+        app:layout_constraintTop_toTopOf="@+id/linkedIn" />
+
+    <ImageButton
+        android:id="@+id/gmail"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitXY"
+        android:src="@drawable/gmail_logo"
+        android:contentDescription="@string/gmail"
+
+        android:layout_margin="@dimen/margin_8dp"
+
+        app:layout_constraintBottom_toBottomOf="@+id/github"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/github"
+        app:layout_constraintTop_toTopOf="@+id/github" />
+
+    <View
+        android:id="@+id/view_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+
+        android:background="@color/colorPrimaryDark"
+
+        android:layout_marginTop="@dimen/margin_32dp"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/linkedIn"/>
+
+</android.support.constraint.ConstraintLayout>
