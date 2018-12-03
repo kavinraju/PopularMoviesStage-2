@@ -1,14 +1,6 @@
 apply plugin: 'com.android.application'
 
 android {
-    signingConfigs {
-        config {
-            keyAlias 'moviereel_skr'
-            keyPassword 'heythisisMovieReelApp_@25'
-            storeFile file("$rootDir/moviereel_keystore.jks")
-            storePassword '@25MoviereelAppOnTheWay_2018'
-        }
-    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "srilasaka_developers.skr.kavinraju.movie_reel"
@@ -25,7 +17,6 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.config
         }
     }
 }
