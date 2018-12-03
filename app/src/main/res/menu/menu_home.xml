@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.popularmovies_stage2.kavinraju.popularmovies.HomeActivity">
+    tools:context="com.popularmovies_stage2.kavinraju.popularmovies.srilasaka_developers.popularmovies_stage2.kavinraju.popularmovies.HomeActivity">
     <item
         android:id="@+id/action_about"
         android:orderInCategory="1"
