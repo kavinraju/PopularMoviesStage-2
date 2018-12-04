@@ -46,7 +46,7 @@ public class HelperMethods {
             case "08":
                 return "Aug";
             case "09":
-                return "Sep";
+                return "Sept";
             case "10":
                 return "Oct";
             case "11":

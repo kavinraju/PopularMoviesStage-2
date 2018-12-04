@@ -10,9 +10,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -195,6 +197,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     ShimmerFrameLayout shimmerFrameLayout;*/
 
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -327,6 +330,30 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         supportFinishAfterTransition();
     }
 
+    @OnClick(R.id.img_btn_share)
+    public void OnClickShare(View view) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(movieDetail.getOriginalTitle())
+                .append("\n")
+                .append(textView_movie_language.getText().toString())
+                .append(" Movie\n")
+                .append("Release Date - ")
+                .append(textView_releaseDate.getText().toString())
+                .append("\n\n")
+                .append("Overview-\n")
+                .append(movieDetail.getOverView());
+        if (movieTrailers.size() > 0) {
+                Uri url = NetworkUtils.buildURL_for_youtube_link(movieTrailers.get(0).getKey());
+                builder.append("\n\n")
+                        .append("Trailer - ")
+                        .append(url.toString());
+        }
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, builder.toString());
+        Intent chooserIntent = Intent.createChooser(intent,"Share using");
+        startActivity(chooserIntent);
+    }
 
     @Override
     public void onTrailerClickListener(String key)

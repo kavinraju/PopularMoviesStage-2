@@ -26,7 +26,6 @@
             android:scaleType="fitXY"
 
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <View
@@ -78,8 +77,8 @@
             android:contentDescription="@string/icon"
             android:elevation="@dimen/elevation_16dp"
 
-            android:layout_marginStart="@dimen/margin_16dp"
-            android:layout_marginTop="@dimen/margin_16dp"
+            android:layout_marginStart="@dimen/margin_8dp"
+            android:layout_marginTop="@dimen/margin_8dp"
 
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -100,13 +99,12 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-
         <TextView
             android:id="@+id/tv_movie_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
 
-            style="@style/TextAppearance.AppCompat.Headline"
+            style="@style/TextAppearance.AppCompat.Display1"
             tools:text="Shawshank Hakdfkfjdkdfkdkdfdkajdkfakf"
             android:textColor="@color/black"
 
@@ -120,8 +118,8 @@
 
         <ImageButton
             android:id="@+id/img_btn_favorite"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
 
             android:padding="@dimen/padding_8dp"
             android:layout_marginEnd="@dimen/margin_8dp"
@@ -129,14 +127,13 @@
             android:contentDescription="@string/bottom_navigation_title_favorite"
             android:background="@drawable/ripple_effect"
 
-
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv_movie_title" />
 
         <ImageView
             android:id="@+id/img_icon_language"
-            android:layout_width="@dimen/img_icon_language_width"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/img_icon_genres_width"
+            android:layout_height="@dimen/img_icon_genres_height"
 
             android:contentDescription="@string/icon"
 
@@ -153,6 +150,7 @@
 
             tools:text="English"
             android:textColor="@color/black"
+            android:textSize="22sp"
 
             android:layout_marginStart="@dimen/margin_8dp"
 
@@ -163,7 +161,7 @@
         <ImageView
             android:id="@+id/img_icon_genres"
             android:layout_width="@dimen/img_icon_genres_width"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/img_icon_genres_height"
 
             android:contentDescription="@string/icon"
 
@@ -183,6 +181,7 @@
 
             tools:text="Crime, Drama"
             android:textColor="@color/black"
+            android:textSize="22sp"
 
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/img_icon_genres"
@@ -190,8 +189,8 @@
 
         <ImageView
             android:id="@+id/img_icon_releaseDate"
-            android:layout_width="@dimen/img_icon_releaseDate_width"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/img_icon_genres_width"
+            android:layout_height="@dimen/img_icon_genres_height"
 
             app:srcCompat="@drawable/calender_primarydark_24dp"
             android:contentDescription="@string/icon"
@@ -206,6 +205,7 @@
 
             tools:text="1994-09-10"
             android:textColor="@color/black"
+            android:textSize="22sp"
 
             android:layout_marginStart="@dimen/margin_8dp"
             app:layout_constraintBottom_toBottomOf="@+id/img_icon_releaseDate"
@@ -216,8 +216,8 @@
         <ImageView
             android:id="@+id/imgStar"
 
-            android:layout_width="@dimen/imgStar_width"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/img_icon_genres_width"
+            android:layout_height="@dimen/img_icon_genres_height"
 
             android:contentDescription="@string/icon"
             app:srcCompat="@drawable/star_primarydark_24dp"
@@ -232,6 +232,7 @@
 
             tools:text="8.32"
             android:textColor="@color/black"
+            android:textSize="22sp"
 
             android:layout_marginStart="@dimen/margin_8dp"
 
@@ -242,7 +243,7 @@
 
         <TextView
             android:id="@+id/tv_tagline"
-            style="@style/Base.TextAppearance.AppCompat.Subhead"
+            style="@style/Base.TextAppearance.AppCompat.Large"
 
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -280,8 +281,6 @@
 
         <TextView
             android:id="@+id/tv_description_title"
-            style="@style/TextAppearance.AppCompat.Title"
-
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
@@ -289,18 +288,17 @@
             android:layout_marginStart="@dimen/margin_16dp"
             android:layout_marginTop="@dimen/margin_16dp"
 
+            style="@style/TextAppearance.AppCompat.Headline"
             android:fontFamily="sans-serif"
             android:text="@string/description"
             android:textColor="@color/colorPrimaryDark"
-
             android:textStyle="bold"
+
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/view_1" />
 
         <TextView
             android:id="@+id/tv_description"
-            style="@style/Base.TextAppearance.AppCompat.Body1"
-
             android:layout_width="0dp"
             android:layout_height="wrap_content"
 
@@ -308,6 +306,7 @@
             android:layout_marginStart="@dimen/margin_8dp"
             android:layout_marginTop="@dimen/margin_8dp"
 
+            style="@style/Base.TextAppearance.AppCompat.Large"
             android:fontFamily="sans-serif"
             android:lineSpacingExtra="4dp"
             android:textColor="@color/black"
@@ -326,7 +325,7 @@
             android:layout_marginEnd="@dimen/margin_16dp"
             android:layout_marginStart="@dimen/margin_16dp"
 
-            style="@style/TextAppearance.AppCompat.Title"
+            style="@style/TextAppearance.AppCompat.Headline"
             android:layout_marginTop="8dp"
             android:fontFamily="sans-serif"
             android:text="@string/casts"
@@ -366,7 +365,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            style="@style/TextAppearance.AppCompat.Title"
+            style="@style/TextAppearance.AppCompat.Headline"
             android:fontFamily="sans-serif"
             android:text="@string/trailers"
             android:textColor="@color/colorPrimaryDark"
@@ -413,13 +412,12 @@
 
                 <TextView
                     android:id="@+id/tv_reviews_title"
-                    style="@style/TextAppearance.AppCompat.Title"
-
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
 
                     android:padding="@dimen/padding_8dp"
 
+                    style="@style/TextAppearance.AppCompat.Headline"
                     android:fontFamily="sans-serif"
                     android:text="@string/reviews"
                     android:textColor="@color/colorPrimaryDark"

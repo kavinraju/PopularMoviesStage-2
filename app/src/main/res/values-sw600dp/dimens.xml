@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="img_poster_recycerView_Card_HomeActivity_height">300dp</dimen>
+
+    <dimen name="movie_poster_height">300dp</dimen>
+    <dimen name="movie_poster_width">250dp</dimen>
+
+    <dimen name="img_icon_genres_width">24dp</dimen>
+    <dimen name="img_icon_genres_height">24dp</dimen>
+
+    <dimen name="img_backDrop_height">300dp</dimen>
+
+    <dimen name="img_star_recycerView_Card_HomeActivity_width">24dp</dimen>
+    <dimen name="img_star_recycerView_Card_HomeActivity_height">24dp</dimen>
+
+    <dimen name="tv_rating_recycerView_Card_HomeActivity_size">24sp</dimen>
+
+    <dimen name="img_favorite_recycerView_Card_HomeActivity_width">24dp</dimen>
+    <dimen name="img_favorite_recycerView_Card_HomeActivity_height">24dp</dimen>
+
+</resources>

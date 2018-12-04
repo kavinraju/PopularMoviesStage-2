@@ -18,7 +18,7 @@
             android:id="@+id/img_poster_recycerView_Card_HomeActivity"
 
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="@dimen/img_poster_recycerView_Card_HomeActivity_height"
 
             tools:src="@tools:sample/avatars"
             android:scaleType="fitXY"
@@ -41,8 +41,8 @@
 
         <ImageView
             android:id="@+id/img_star_recycerView_Card_HomeActivity"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
+            android:layout_width="@dimen/img_star_recycerView_Card_HomeActivity_width"
+            android:layout_height="@dimen/img_star_recycerView_Card_HomeActivity_height"
 
             android:contentDescription="@string/icon"
             android:src="@drawable/star_primarydark_24dp"
@@ -59,7 +59,7 @@
 
 
             android:textColor="@color/colorPrimary"
-            android:textSize="12sp"
+            android:textSize="@dimen/tv_rating_recycerView_Card_HomeActivity_size"
 
             android:paddingTop="4dp"
             android:paddingBottom="4dp"
@@ -72,8 +72,8 @@
 
         <ImageView
             android:id="@+id/img_favorite_recycerView_Card_HomeActivity"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:layout_width="@dimen/img_favorite_recycerView_Card_HomeActivity_width"
+            android:layout_height="@dimen/img_favorite_recycerView_Card_HomeActivity_height"
 
             android:contentDescription="@string/icon"
             android:src="@drawable/favorite_border_primary_24dp"
