@@ -17,5 +17,6 @@
 
     <dimen name="img_favorite_recycerView_Card_HomeActivity_width">24dp</dimen>
     <dimen name="img_favorite_recycerView_Card_HomeActivity_height">24dp</dimen>
-
+    <dimen name="iv_the_movie_db_width">150dp</dimen>
+    <dimen name="iv_the_movie_db_height">55dp</dimen>
 </resources>

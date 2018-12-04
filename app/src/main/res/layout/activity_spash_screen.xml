@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -68,5 +69,18 @@
         app:layout_constraintEnd_toEndOf="@id/textView_app_name"
         app:layout_constraintStart_toStartOf="@id/textView_app_name"
         app:layout_constraintTop_toBottomOf="@id/textView_app_name"/>
+
+    <ImageView
+        android:id="@+id/iv_the_movie_db"
+        android:layout_width="@dimen/iv_the_movie_db_width"
+        android:layout_height="@dimen/iv_the_movie_db_height"
+
+        android:background="@drawable/themoviedb"
+
+        android:layout_marginBottom="@dimen/margin_16dp"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

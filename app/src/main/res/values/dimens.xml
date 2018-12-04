@@ -36,5 +36,7 @@
     <dimen name="tv_rating_recycerView_Card_HomeActivity_size">12sp</dimen>
     <dimen name="img_favorite_recycerView_Card_HomeActivity_width">16dp</dimen>
     <dimen name="img_favorite_recycerView_Card_HomeActivity_height">16dp</dimen>
+    <dimen name="iv_the_movie_db_width">75dp</dimen>
+    <dimen name="iv_the_movie_db_height">30dp</dimen>
 
 </resources>
